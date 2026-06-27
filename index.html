@@ -410,8 +410,8 @@ function buildKPIs(){
     {ic:'⚠️',icl:'var(--warnbg)',lbl:'Eventos fuera de rango',val:totE,
      kc:totE>20?'var(--bad)':totE>5?'var(--warn)':'var(--ok)',kvc:totE>20?'var(--bad)':totE>5?'var(--warn)':'var(--ok)',
      sub:`${eT.length} temp · ${eH.length} humedad`},
-    {ic:'📊',icl:'var(--green-l)',lbl:'Lecturas analizadas',val:rows.length>=1000?(rows.length/1000).toFixed(1)+'<small>k</small>':rows.length,
-     kc:'var(--blue)',sub:'en el período'},
+    {ic:'📊',icl:'var(--green-l)',lbl:'Lecturas analizadas',val:(()=>{const n=filtDaily(S.area).reduce((a,r)=>a+r.n,0);return n>=1000?(n/1000).toFixed(1)+'<small>k</small>':n;})(),
+     kc:'var(--blue)',sub:'en el período · lecturas reales'},
   ];
   el.innerHTML=items.map(k=>kcard(k)).join('');
 }
@@ -807,7 +807,7 @@ function updatePill(){
   const cls=stCls(worst);
   document.getElementById('gpill').className='gpill g-'+cls;
   document.getElementById('gpill-txt').textContent=worst>=95?'Planta en control':worst>=80?'Requiere atención':'Eventos críticos';
-  const n=S.area==='ambas'?(D.envasado.records+D.ciclon.records):filt(S.area).length;
+  const n=S.area==='ambas'?(D.envasado.records+D.ciclon.records):filtDaily(S.area).reduce((a,r)=>a+r.n,0);
   document.getElementById('footer-n').textContent=n.toLocaleString('es')+' lecturas';
 }
 
